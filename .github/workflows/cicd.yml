@@ -4,6 +4,7 @@
 # documentation.
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
 name: Java CI with Gradle
 
 on:
@@ -32,4 +33,13 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
 
-  
+    - name: Build & push Docker image
+    - uses: mr-smithers-excellent/docker-build-push@v6
+      with:
+        image: dockerbenj/lunchbon_backend
+        tags: v1, latest
+        registry: docker.io
+        dockerfile: Dockerfile.ci
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        
