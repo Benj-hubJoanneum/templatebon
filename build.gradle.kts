@@ -1,3 +1,4 @@
+import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.CategoryFilter.include
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -36,7 +37,6 @@ dependencies {
 	implementation("com.google.firebase:firebase-auth:21.0.1")
 	implementation("com.google.firebase:firebase-bom:31.0.0")
 	implementation("com.google.firebase:firebase-auth-ktx:22.3.0")
-
 }
 
 tasks.withType<KotlinCompile> {
@@ -46,6 +46,23 @@ tasks.withType<KotlinCompile> {
 	}
 }
 
-tasks.withType<Test> {
-	useJUnitPlatform()
+val integrationTest = tasks.register<Test>("integrationTest") {
+	useJUnitPlatform {
+		includeTags("integration")
+		excludeTags("*")
+	}
+}
+
+val unitTest = tasks.named<Test>("test") {
+	useJUnitPlatform {
+		excludeTags("integration")
+	}
+}
+
+tasks.register("runUnitTests") {
+	dependsOn(unitTest)
+}
+
+tasks.register("runIntegrationTests") {
+	dependsOn(integrationTest)
 }
