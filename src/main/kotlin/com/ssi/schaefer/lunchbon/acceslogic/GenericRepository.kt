@@ -17,7 +17,7 @@ class GenericRepository<T: Any> : IGenericRepository<T> {
     constructor(firestore: Firestore, collectionName: String, documentClass: Class<T>) {
         this.collectionName = collectionName
         this.firestore = firestore
-        this.documentClass = documentClass
+        this.documentClass = documentClassujik
         this.collection = firestore.collection(collectionName)
     }
 
