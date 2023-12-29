@@ -42,3 +42,19 @@ jobs:
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Discord notification on success
+      if: success()
+      uses: Ilshidur/action-discord@v2
+      with:
+        args: success
+        token: ${{ secrets.DISCORD_TOKEN }}
+        channel_id: YOUR_DISCORD_CHANNEL_ID
+    
+    - name: Discord notification on failure
+      if: failure()
+      uses: Ilshidur/action-discord@v2
+      with:
+        args: failure
+        token: ${{ secrets.DISCORD_TOKEN }}
+        channel_id: YOUR_DISCORD_CHANNEL_ID
