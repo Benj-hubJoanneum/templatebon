@@ -9,8 +9,8 @@ name: Java CI with Gradle
 
 on:
   pull_request:
-      branches:
-        - main
+    branches:
+      - main
   push:
     branches:
       - test
@@ -67,5 +67,6 @@ jobs:
 
       - name: Merge test branch to main
         run: |
-          gh pr merge <PR_NUMBER> --merge --auto
+          PR_NUMBER=$(jq --raw-output .pull_request.number "${GITHUB_EVENT_PATH}")
+          gh pr merge $PR_NUMBER --merge --auto
         if: success()
