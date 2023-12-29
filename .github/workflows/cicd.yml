@@ -43,18 +43,9 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Discord notification on success
-      if: success()
-      uses: Ilshidur/action-discord@v2
+    - name: Discord notification
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_TOKEN }}
+      uses: Ilshidur/action-discord@master
       with:
-        args: success
-        token: ${{ secrets.DISCORD_TOKEN }}
-        channel_id: 1190352563137159360
-    
-    - name: Discord notification on failure
-      if: failure()
-      uses: Ilshidur/action-discord@v2
-      with:
-        args: failure
-        token: ${{ secrets.DISCORD_TOKEN }}
-        channel_id: 1190352563137159360
+        args: 'The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed.'
