@@ -57,4 +57,4 @@ jobs:
       with:
         args: failure
         token: ${{ secrets.DISCORD_TOKEN }}
-        channel_id: YOUR_DISCORD_CHANNEL_ID
+        channel_id: 1190352563137159360
