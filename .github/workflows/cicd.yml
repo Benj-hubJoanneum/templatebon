@@ -21,6 +21,9 @@ jobs:
       matrix:
         os: [ubuntu-latest]
 
+    outputs:
+      continue-build: ${{ steps.success.outputs.success }}
+
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -33,15 +36,31 @@ jobs:
       run: chmod +x gradlew
 
     - name: Run Unit Tests
-      run: ./gradlew runUnitTests
+      id: unit-tests
+      run: |
+        ./gradlew runUnitTests || echo "success=false" >> $GITHUB_ENV
       continue-on-error: true
 
     - name: Run Integration Tests
-      run: ./gradlew runIntegrationTests
+      id: integration-tests
+      run: |
+        if [ -z "${success}" ]; then
+          ./gradlew runIntegrationTests || echo "success=false" >> $GITHUB_ENV
+        fi
       if: success()
+
     - name: Build with Gradle
-      run: ./gradlew build
+      id: build-step
+      run: |
+        if [ -z "${success}" ]; then
+          ./gradlew build || echo "success=false" >> $GITHUB_ENV
+        fi
       if: success()
+
+    - name: Set success flag
+      id: success
+      run: echo "success=true" >> $GITHUB_ENV
+      if: always()
 
     - name: Build & push Docker image
       uses: mr-smithers-excellent/docker-build-push@v6
@@ -52,7 +71,7 @@ jobs:
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-      if: success()
+      if: success() && needs.build.outputs.continue-build == 'true'
 
     - name: Discord notification
       env:
@@ -60,4 +79,4 @@ jobs:
       uses: Ilshidur/action-discord@master
       with:
         args: 'New Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
-      if: success()
+      if: success() && needs.build.outputs.continue-build == 'true'
