@@ -64,3 +64,8 @@ jobs:
         with:
           args: 'New Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
         if: success()
+
+      - name: Merge test branch to main
+        run: |
+          gh pr merge <PR_NUMBER> --merge --auto
+        if: success()
