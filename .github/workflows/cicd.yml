@@ -30,6 +30,13 @@ jobs:
         distribution: 'adopt'
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
+    - name: Run Unit Tests
+      run: ./gradlew test
+
+    - name: Run Integration Tests
+      run: ./gradlew integrationTest
+
     - name: Build with Gradle
       run: ./gradlew build
 
@@ -48,4 +55,4 @@ jobs:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_TOKEN }}
       uses: Ilshidur/action-discord@master
       with:
-        args: 'The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed.'
+        args: 'New Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
