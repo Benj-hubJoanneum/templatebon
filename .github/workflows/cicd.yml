@@ -64,9 +64,3 @@ jobs:
         with:
           args: 'New Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
         if: success()
-
-      - name: Merge test branch to main
-        run: |
-          PR_NUMBER=$(jq --raw-output .pull_request.number "${GITHUB_EVENT_PATH}")
-          gh pr merge $PR_NUMBER --merge --auto
-        if: success()
