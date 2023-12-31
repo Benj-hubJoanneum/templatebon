@@ -12,6 +12,16 @@ on:
     branches:
       - test
 
+env:
+  GIT_USER_EMAIL: "actions@github.com"
+  GIT_USER_NAME: "GitHub Actions"
+  DOCKER_IMAGE_NAME: "dockerbenj/lunchbon_backend"
+  DOCKER_IMAGE_TAGS: "v1, latest"
+  DOCKER_REGISTRY: "docker.io"
+  DISCORD_WEBHOOK: ${{ secrets.DISCORD_TOKEN }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,8 +29,8 @@ jobs:
     steps:
       - name: Set Git identity
         run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
+          git config --global user.email "${{ env.GIT_USER_EMAIL }}"
+          git config --global user.name "${{ env.GIT_USER_NAME }}"
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -39,7 +49,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
         id: build
-        continue-on-error: true  # Continue on error to run subsequent steps
+        if: success()
 
       - name: Run Unit Tests
         run: ./gradlew runUnitTests
@@ -59,17 +69,17 @@ jobs:
         id: docker
         uses: mr-smithers-excellent/docker-build-push@v6
         with:
-          image: dockerbenj/lunchbon_backend
-          tags: v1, latest
-          registry: docker.io
+          image: "${{ env.DOCKER_IMAGE_NAME }}"
+          tags: "${{ env.DOCKER_IMAGE_TAGS }}"
+          registry: "${{ env.DOCKER_REGISTRY }}"
           dockerfile: Dockerfile
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: "${{ env.DOCKER_USERNAME }}"
+          password: "${{ env.DOCKER_PASSWORD }}"
         if: success()
 
       - name: Discord notification
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_TOKEN }}
+          DISCORD_WEBHOOK: "${{ env.DISCORD_WEBHOOK }}"
         uses: Ilshidur/action-discord@master
         with:
           args: 'New Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
