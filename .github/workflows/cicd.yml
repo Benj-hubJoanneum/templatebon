@@ -10,10 +10,7 @@ name: Java CI with Gradle
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - test
 
 jobs:
   build:
@@ -33,18 +30,25 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+        
+      - name: Build with Gradle
+        run: ./gradlew build
+        if: success()
 
       - name: Run Unit Tests
         run: ./gradlew runUnitTests
-        continue-on-error: true
+        if: success()
 
       - name: Run Integration Tests
         run: ./gradlew runIntegrationTests
         if: success()
 
-      - name: Build with Gradle
-        run: ./gradlew build
-        if: success()
+      - name: Merge to main
+        run: |
+          git checkout main
+          git pull origin main
+          git merge --no-ff "${{ github.head_ref }}"
+          git push origin main
 
       - name: Build & push Docker image
         id: docker
