@@ -29,16 +29,24 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run Unit Tests
-        run: ./gradlew runUnitTests
-
-      - name: Run Integration Tests
-        run: ./gradlew runIntegrationTests
-        if: success()
-
       - name: Build with Gradle
         run: ./gradlew build
         if: success()
+
+      - name: Run Unit Tests
+        run: ./gradlew runUnitTests
+        if: success()
+
+      - name: Run Integration Tests # for later builds we need to isolate push tests from get tests (rebuilding DB)
+        run: ./gradlew runIntegrationTests
+        if: success()
+
+      - name: Merge to main
+        run: |
+          git checkout main
+          git pull origin main
+          git merge --no-ff "${{ github.head_ref }}"
+          git push origin main
 
       - name: Build & push Docker image
         id: docker
