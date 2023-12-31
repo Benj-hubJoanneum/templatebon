@@ -71,4 +71,3 @@ jobs:
           if [ ${{ job.status }} != "success" ]; then
             git reset --hard HEAD^  # Reset to the previous commit
           fi
-rollback · Benj-hubJoanneum/templatebon@024ab5c
