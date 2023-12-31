@@ -85,9 +85,10 @@ jobs:
           args: 'New Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
         if: success()
 
-      - name: Undo push on failure
+      - name: ensure working branch
         run: |
-          if [ "${{ failure() }}" == "true" ]; then
-            git push -f origin HEAD^:test
+          if [ "${{ job.status }}" != "success" ]; then
+            git checkout main
+            git push -f origin main:test
           fi
-        if: always()   # Ensure this step runs always, regardless of the previous steps
+        if: always()  # Ensure this step runs always, regardless of the previous steps
