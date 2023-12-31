@@ -59,3 +59,10 @@ jobs:
         with:
           args: 'New Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
         if: success() && github.event_name == 'pull_request' && github.ref == 'refs/heads/main'
+
+      - name: Force-push to test branch on failure
+        if: failure()
+        run: |
+          git checkout main
+          git branch -f test main
+          git push origin test -f
