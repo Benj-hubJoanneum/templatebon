@@ -77,6 +77,7 @@ jobs:
 
       - name: Undo checkout on failure
         run: |
-          if [ ${{ job.status }} != "success" ]; then
+          if [ "${{ job.status }}" != "success" ]; then
             git reset --hard HEAD^  # Reset to the previous commit
           fi
+        if: always()  # Ensure this step runs always, regardless of the previous steps
