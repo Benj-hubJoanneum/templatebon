@@ -90,7 +90,7 @@ jobs:
         run: |
           if [ "${{ job.status }}" != "success" ]; then
             git fetch origin main:main
-            git reset --hard origin/main
+            git reset --hard main
             git push -f origin main:test
           fi
         env:
