@@ -85,10 +85,10 @@ jobs:
           args: 'New Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
         if: success()
 
-      - name: ensure working branch
+      - name: Ensure working branch
         run: |
           if [ "${{ job.status }}" != "success" ]; then
             git checkout main
-            git push -f origin main:test
+            git push -f "https://${{ secrets.FORCE_PUSH_TOKEN }}@github.com/${{ github.repository }}.git" main:test
           fi
         if: always()  # Ensure this step runs always, regardless of the previous steps
