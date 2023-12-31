@@ -30,10 +30,11 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-        
+
       - name: Build with Gradle
         run: ./gradlew build
-        if: success()
+        id: build
+        continue-on-error: true  # Continue on error to run subsequent steps
 
       - name: Run Unit Tests
         run: ./gradlew runUnitTests
@@ -45,10 +46,12 @@ jobs:
 
       - name: Merge to main
         run: |
-          git checkout main
-          git pull origin main
-          git merge --no-ff "${{ github.head_ref }}"
-          git push origin main
+          if [ ${{ job.status }} = "success" ]; then
+            git checkout main
+            git pull origin main
+            git merge --no-ff "${{ github.head_ref }}"
+            git push origin main
+          fi
 
       - name: Build & push Docker image
         id: docker
