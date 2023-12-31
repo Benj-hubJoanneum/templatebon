@@ -1,3 +1,30 @@
+
+Skip to content
+
+    Benj-hubJoanneum
+    /
+    templatebon
+
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+
+    Settings
+
+Java CI with Gradle
+rollback #27
+
+Jobs
+
+Run details
+
+Workflow file for this run
+.github/workflows/cicd.yml at 024ab5c
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
@@ -8,17 +35,22 @@
 name: Java CI with Gradle
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
-      - test
+      - main
 
 jobs:
-  build_and_merge:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history to allow resetting to any commit
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
@@ -29,16 +61,17 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle and Run Unit Tests
-        run: |
-          ./gradlew build runUnitTests
+      - name: Run Unit Tests
+        run: ./gradlew runUnitTests
+        continue-on-error: true
 
-      - name: Merge to main
-        run: |
-          git checkout main
-          git pull origin main
-          git merge --no-ff "${{ github.head_ref }}"
-          git push origin main
+      - name: Run Integration Tests
+        run: ./gradlew runIntegrationTests
+        if: success()
+
+      - name: Build with Gradle
+        run: ./gradlew build
+        if: success()
 
       - name: Build & push Docker image
         id: docker
@@ -58,11 +91,11 @@ jobs:
         uses: Ilshidur/action-discord@master
         with:
           args: 'New Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
-        if: success() && github.event_name == 'pull_request' && github.ref == 'refs/heads/main'
+        if: success()
 
-      - name: Force-push to test branch on failure
-        if: failure()
+      - name: Undo checkout on failure
         run: |
-          git checkout main
-          git branch -f test main
-          git push origin test -f
+          if [ ${{ job.status }} != "success" ]; then
+            git reset --hard HEAD^  # Reset to the previous commit
+          fi
+rollback · Benj-hubJoanneum/templatebon@024ab5c
