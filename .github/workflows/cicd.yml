@@ -89,8 +89,7 @@ jobs:
       - name: Ensure working branch
         run: |
           if [ "${{ job.status }}" != "success" ]; then
-            git fetch origin main:main
-            git reset --hard main
+            git fetch origin main
             git push -f origin main:test
           fi
         env:
