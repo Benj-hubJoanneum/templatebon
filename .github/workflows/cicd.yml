@@ -46,12 +46,10 @@ jobs:
 
       - name: Merge to main
         run: |
-          if [ ${{ job.status }} = "success" ]; then
-            git checkout main
-            git pull origin main
-            git merge --no-ff "${{ github.head_ref }}"
-            git push origin main
-          fi
+          git fetch origin test:refs/remotes/origin/test
+          git merge --no-ff origin/test
+          git push origin main
+        if: success()
 
       - name: Build & push Docker image
         id: docker
