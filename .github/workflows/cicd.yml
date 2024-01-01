@@ -3,7 +3,7 @@ name: Kotlin CI / CD with Gradle
 on:
   push:
     branches:
-      - test
+      - 'test*'
 
 env:
   GIT_USER_EMAIL: "actions@github.com"
