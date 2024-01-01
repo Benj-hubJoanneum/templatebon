@@ -75,6 +75,9 @@ jobs:
     needs: build_and_test
     runs-on: ubuntu-latest
     steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
     
       - name: Build & push Docker image
         id: docker
