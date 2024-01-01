@@ -9,8 +9,10 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches:
-      - test
+    branches: [test]
+
+  pull_request:
+    branches: [test]
 
 env:
   GIT_USER_EMAIL: "actions@github.com"
@@ -34,9 +36,9 @@ jobs:
           git config --global user.name "${{ env.GIT_USER_NAME }}"
 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
-          fetch-depth: 1  # Fetch all history to allow resetting to any commit
+          fetch-depth: 0  # Fetch all history to allow resetting to any commit
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
@@ -69,38 +71,69 @@ jobs:
           path: |
             build/libs
 
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Run Unit Tests
-        run: ./gradlew runUnitTests
-        if: success()
-
-      - name: Run Integration Tests
-        run: ./gradlew runIntegrationTests
-        if: success()
-
-      - name: Merge test into main
-        run: |
-          git checkout main
-          git merge test
-        if: success()
-
-      - name: Ensure working branch
+      - name: Reset branch on failure
         run: |
           if [ "${{ job.status }}" != "success" ]; then
             git reset --hard HEAD~1
           fi
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        if: always() # Ensure this step runs always, regardless of the previous steps
+        if: always()  # Ensure this step runs always, regardless of the previous steps
 
-  release:
+  test:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          
+      - name: Run Unit Tests
+        run: ./gradlew runUnitTests
+        if: success()
+
+      - name: Upload Instrumentation Test report
+        uses: actions/upload-artifact@v2
+        with:
+          name: instrumentation_test_report
+          path: app/build/reports/androidTests/connected
+
+      - name: Run Integration Tests
+        run: ./gradlew runIntegrationTests
+        if: success()
+
+      - name: Upload Instrumentation Test report
+        uses: actions/upload-artifact@v2
+        with:
+          name: instrumentation_test_report
+          path: app/build/reports/androidTests/connected
+        if: always()
+
+      - name: Reset branch on failure
+        run: |
+          if [ "${{ job.status }}" != "success" ]; then
+            git reset --hard HEAD~1
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        if: always()  # Ensure this step runs always, regardless of the previous steps
+
+  codacy-analysis-cli:
+    name: Codacy Analysis CLI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@test
+
+      - name: Run Codacy Analysis CLI
+        uses: codacy/codacy-analysis-cli-action@master
+
+  docker:
     needs: test
     runs-on: ubuntu-latest
     steps:
+          
       - name: Get last version
         id: get_last_version
         run: echo "::set-output name=version::$(cat version.txt || echo 0)"
@@ -109,13 +142,12 @@ jobs:
         id: increment_version
         run: echo "VERSION=$(( $(cat version.txt || echo 0) + 1 ))" >> $GITHUB_ENV
 
-
       - name: Build & push Docker image
         id: docker
         uses: mr-smithers-excellent/docker-build-push@v6
         with:
           image: "${{ env.DOCKER_IMAGE_NAME }}"
-          tags: "${{ env.DOCKER_IMAGE_TAGS }}.${{ steps.increment_version.outputs.version }}"
+          tags: "${{ env.DOCKER_IMAGE_TAGS }}-${{ steps.increment_version.outputs.version }}"
           registry: "${{ env.DOCKER_REGISTRY }}"
           dockerfile: Dockerfile
           username: "${{ env.DOCKER_USERNAME }}"
@@ -130,3 +162,11 @@ jobs:
           args: 'New Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
         if: success()
 
+      - name: Reset branch on failure
+        run: |
+          if [ "${{ job.status }}" != "success" ]; then
+            git reset --hard HEAD~1
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        if: always()  # Ensure this step runs always, regardless of the previous steps
