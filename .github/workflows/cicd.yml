@@ -61,9 +61,7 @@ jobs:
       - name: Ensure working branch
         run: |
           if [ "${{ job.status }}" != "success" ]; then
-            git fetch origin main:main
-            git reset --hard main
-            git push -f origin test
+            uses: exions/undo-push@v1
           fi
         if: always()
 
