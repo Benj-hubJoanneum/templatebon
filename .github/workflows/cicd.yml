@@ -43,16 +43,22 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        id: build
         run: ./gradlew build
+        id: build
         if: success()
 
       - name: Run Unit Tests
         run: ./gradlew runUnitTests
         if: success()
-        
+
       - name: Run Integration Tests
         run: ./gradlew runIntegrationTests
+        if: success()
+
+      - name: Merge test into main
+        run: |
+          git checkout main
+          git merge test
         if: success()
 
       - name: Upload Instrumentation Test report
@@ -70,13 +76,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         if: always()  # Ensure this step runs always, regardless of the previous steps
-
-      - name: Merge test into main
-        run: |
-          git fetch origin main:main
-          git checkout main
-          git merge test
-        if: success()
 
   push_new_docker_image:
     needs: build_and_test
