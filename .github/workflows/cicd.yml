@@ -1,11 +1,43 @@
-name: Pipe
+
+Skip to content
+
+    Benj-hubJoanneum
+    /
+    templatebon
+
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+
+    Settings
+
+Java CI with Gradle
+update #79
+
+Jobs
+
+Run details
+
+Workflow file for this run
+.github/workflows/cicd.yml at d2888a8
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Java CI with Gradle
 
 on:
   push:
-    branches: [test]
-
-  pull_request:
-    branches: [test]
+    branches:
+      - test
 
 env:
   GIT_USER_EMAIL: "actions@github.com"
@@ -16,10 +48,9 @@ env:
   DISCORD_WEBHOOK: ${{ secrets.DISCORD_TOKEN }}
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  GH_TOKEN: ${{ secrets.FORCE_PUSH_TOKEN }}
 
 jobs:
-  build_and_test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,11 +58,10 @@ jobs:
         run: |
           git config --global user.email "${{ env.GIT_USER_EMAIL }}"
           git config --global user.name "${{ env.GIT_USER_NAME }}"
-
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 1 
+          fetch-depth: 0  # Fetch all history to allow resetting to any commit
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
@@ -61,30 +91,6 @@ jobs:
           git merge test
         if: success()
 
-      - name: Upload Instrumentation Test report
-        uses: actions/upload-artifact@v2
-        with:
-          name: instrumentation_test_report
-          path: app/build/reports/androidTests/connected
-        if: always()
-
-      - name: Reset branch on failure
-        run: |
-          if [ "${{ job.status }}" != "success" ]; then
-            uses: exions/undo-push@v1.0.0
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        if: always()  # Ensure this step runs always, regardless of the previous steps
-
-  push_new_docker_image:
-    needs: build_and_test
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-    
       - name: Build & push Docker image
         id: docker
         uses: mr-smithers-excellent/docker-build-push@v6
@@ -104,3 +110,13 @@ jobs:
         with:
           args: 'New Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
         if: success()
+
+      - name: Ensure working branch
+        run: |
+          if [ "${{ job.status }}" != "success" ]; then
+            git fetch origin main:main
+            git reset --hard main
+            git push -f origin test
+          fi
+        if: always()  # Ensure this step runs always, regardless of the previous steps
+update · Benj-hubJoanneum/templatebon@d2888a8
