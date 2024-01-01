@@ -107,8 +107,9 @@ jobs:
 
       - name: Increment version
         id: increment_version
-        run: echo "::set-output name=version::${{ steps.get_last_version.outputs.version + 1 }}" >> version.txt
+        run: echo "VERSION=$(( $(cat version.txt || echo 0) + 1 ))" >> $GITHUB_ENV
 
+      
       - name: Build & push Docker image
         id: docker
         uses: mr-smithers-excellent/docker-build-push@v6
