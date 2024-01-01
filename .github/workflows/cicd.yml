@@ -69,6 +69,15 @@ jobs:
           path: |
             build/libs
 
+      - name: Reset branch on failure
+        run: |
+          if [ "${{ job.status }}" != "success" ]; then
+            git reset --hard HEAD~1
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        if: always()  # Ensure this step runs always, regardless of the previous steps
+
   test:
     needs: build
     runs-on: build
@@ -76,10 +85,19 @@ jobs:
       - name: Run Unit Tests
         run: ./gradlew runUnitTests
         if: success()
-  
+
       - name: Run Integration Tests
         run: ./gradlew runIntegrationTests
         if: success()
+
+      - name: Reset branch on failure
+        run: |
+          if [ "${{ job.status }}" != "success" ]; then
+            git reset --hard HEAD~1
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        if: always()  # Ensure this step runs always, regardless of the previous steps
 
   docker:
     needs: test
@@ -112,3 +130,12 @@ jobs:
         with:
           args: 'New Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
         if: success()
+
+      - name: Reset branch on failure
+        run: |
+          if [ "${{ job.status }}" != "success" ]; then
+            git reset --hard HEAD~1
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        if: always()  # Ensure this step runs always, regardless of the previous steps
