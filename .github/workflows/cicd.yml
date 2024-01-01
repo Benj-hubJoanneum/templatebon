@@ -24,6 +24,7 @@ jobs:
         run: |
           git config --global user.email "${{ env.GIT_USER_EMAIL }}"
           git config --global user.name "${{ env.GIT_USER_NAME }}"
+          
       - name: Checkout code
         uses: actions/checkout@v3
         with:
@@ -70,6 +71,9 @@ jobs:
     needs: build_and_test
     runs-on: ubuntu-latest
     steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Build & push Docker image
         id: docker
