@@ -1,0 +1,17 @@
+name: Undo Push
+
+on:
+  workflow_run:
+    workflows: ["Kotlin CI / CD with Gradle"]
+    types:
+      - failure
+
+jobs:
+  undo_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Undo Push
+        uses: exions/undo-push@v1
