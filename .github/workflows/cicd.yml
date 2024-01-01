@@ -58,16 +58,6 @@ jobs:
           git merge test
         if: success()
 
-      - name: Ensure working branch
-        run: |
-          if [ "${{ job.status }}" != "success" ]; then
-          echo "Reverting changes..."
-          git checkout main
-          git reset --hard HEAD~1
-          git push -f origin main
-          fi
-        if: always()
-
   push_new_docker_image:
     needs: build_and_test
     runs-on: ubuntu-latest
