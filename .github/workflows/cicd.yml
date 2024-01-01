@@ -3,7 +3,7 @@ name: Kotlin CI / CD with Gradle
 on:
   push:
     branches:
-      - test
+      - 'test*'
 
 env:
   GIT_USER_EMAIL: "actions@github.com"
@@ -18,6 +18,11 @@ env:
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
+
+    outputs:
+      id: build_outputs
+      values:
+        BUILD_SUCCESS: ${{ steps.build.outputs.BUILD_SUCCESS }}
 
     steps:
       - name: Set Git identity
@@ -40,9 +45,10 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: |
+          ./gradlew build
+          echo "BUILD_SUCCESS=true" >> $GITHUB_ENV
         id: build
-        if: success()
 
       - name: Run Unit Tests
         run: ./gradlew runUnitTests
@@ -52,27 +58,18 @@ jobs:
         run: ./gradlew runIntegrationTests
         if: success()
 
-      - name: Merge test into main
+      - name: Merge test into dev
         run: |
-          git checkout main
+          git checkout dev
           git merge test
         if: success()
-
-      - name: Ensure working branch
-        run: |
-          if [ "${{ job.status }}" != "success" ]; then
-          echo "Reverting changes..."
-          git checkout main
-          git reset --hard HEAD~1
-          git push -f origin main
-          fi
-        if: always()
 
   push_new_docker_image:
     needs: build_and_test
     runs-on: ubuntu-latest
-    steps:
+    if: ${{ needs.build_and_test.outputs.BUILD_SUCCESS == 'true' }}
 
+    steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -85,13 +82,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build
-        id: build
-        if: success()
-
       - name: Build & push Docker image
-        id: docker
         uses: mr-smithers-excellent/docker-build-push@v6
         with:
           image: "${{ env.DOCKER_IMAGE_NAME }}"
