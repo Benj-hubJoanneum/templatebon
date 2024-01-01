@@ -71,24 +71,17 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         if: always()  # Ensure this step runs always, regardless of the previous steps
 
-  docker:
+  push_new_docker_image:
     needs: build_and_test
     runs-on: ubuntu-latest
     steps:
-      - name: Get last version
-        id: get_last_version
-        run: echo "::set-output name=version::$(cat version.txt || echo 0)"
-
-      - name: Increment version
-        id: increment_version
-        run: echo "VERSION=$(( $(cat version.txt || echo 0) + 1 ))" >> $GITHUB_ENV
-
+    
       - name: Build & push Docker image
         id: docker
         uses: mr-smithers-excellent/docker-build-push@v6
         with:
           image: "${{ env.DOCKER_IMAGE_NAME }}"
-          tags: "${{ env.DOCKER_IMAGE_TAGS }}-${{ steps.increment_version.outputs.version }}"
+          tags: "${{ env.DOCKER_IMAGE_TAGS }}"
           registry: "${{ env.DOCKER_REGISTRY }}"
           dockerfile: Dockerfile
           username: "${{ env.DOCKER_USERNAME }}"
@@ -102,12 +95,3 @@ jobs:
         with:
           args: 'New Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
         if: success()
-
-      - name: Reset branch on failure
-        run: |
-          if [ "${{ job.status }}" != "success" ]; then
-            git reset --hard HEAD~1
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        if: always()  # Ensure this step runs always, regardless of the previous steps
