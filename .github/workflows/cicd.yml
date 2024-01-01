@@ -61,7 +61,10 @@ jobs:
       - name: Ensure working branch
         run: |
           if [ "${{ job.status }}" != "success" ]; then
-            uses: exions/undo-push@v1
+          echo "Reverting changes..."
+          git checkout main
+          git reset --hard HEAD~1
+          git push -f origin main
           fi
         if: always()
 
