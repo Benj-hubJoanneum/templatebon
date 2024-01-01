@@ -19,7 +19,7 @@ env:
   GH_TOKEN: ${{ secrets.FORCE_PUSH_TOKEN }}
 
 jobs:
-  build:
+  build_and_test:
     runs-on: ubuntu-latest
 
     steps:
@@ -47,64 +47,10 @@ jobs:
         run: ./gradlew build
         if: success()
 
-      - name: Save Gradle cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-
-
-      - name: Save build artifacts
-        if: success()
-        uses: actions/upload-artifact@v2
-        with:
-          name: gradle-artifacts
-          path: |
-            build/libs
-
-      - name: Reset branch on failure
-        run: |
-          if [ "${{ job.status }}" != "success" ]; then
-            git reset --hard HEAD~1
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        if: always()  # Ensure this step runs always, regardless of the previous steps
-
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-          
-      - name: Restore Gradle cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-
       - name: Run Unit Tests
         run: ./gradlew runUnitTests
         if: success()
-
-      - name: Upload Instrumentation Test report
-        uses: actions/upload-artifact@v2
-        with:
-          name: instrumentation_test_report
-          path: app/build/reports/androidTests/connected
-
+        
       - name: Run Integration Tests
         run: ./gradlew runIntegrationTests
         if: success()
@@ -119,14 +65,14 @@ jobs:
       - name: Reset branch on failure
         run: |
           if [ "${{ job.status }}" != "success" ]; then
-            git reset --hard HEAD~1
+            uses: exions/undo-push@v1.0.0
           fi
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         if: always()  # Ensure this step runs always, regardless of the previous steps
 
   docker:
-    needs: test
+    needs: build_and_test
     runs-on: ubuntu-latest
     steps:
       - name: Get last version
