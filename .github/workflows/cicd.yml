@@ -71,10 +71,10 @@ jobs:
           path: |
             build/libs
 
-      - name: Reset branch on failure
+      - name: Ensure working branch
         run: |
           if [ "${{ job.status }}" != "success" ]; then
-            git reset --hard HEAD~1
+            uses: exions/undo-push@v1.0.0
           fi
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
