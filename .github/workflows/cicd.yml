@@ -19,6 +19,11 @@ jobs:
   build_and_test:
     runs-on: ubuntu-latest
 
+    outputs:
+      id: build_outputs
+      values:
+        BUILD_SUCCESS: ${{ steps.build.outputs.BUILD_SUCCESS }}
+
     steps:
       - name: Set Git identity
         run: |
@@ -40,9 +45,10 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: |
+          ./gradlew build
+          echo "BUILD_SUCCESS=true" >> $GITHUB_ENV
         id: build
-        if: success()
 
       - name: Run Unit Tests
         run: ./gradlew runUnitTests
@@ -61,8 +67,9 @@ jobs:
   push_new_docker_image:
     needs: build_and_test
     runs-on: ubuntu-latest
-    steps:
+    if: ${{ needs.build_and_test.outputs.BUILD_SUCCESS == 'true' }}
 
+    steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -75,13 +82,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build
-        id: build
-        if: success()
-
       - name: Build & push Docker image
-        id: docker
         uses: mr-smithers-excellent/docker-build-push@v6
         with:
           image: "${{ env.DOCKER_IMAGE_NAME }}"
