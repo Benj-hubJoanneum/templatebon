@@ -51,6 +51,10 @@ class UserRepository(firestore: Firestore) : GenericRepository<User>( firestore,
         }
     }
 
+    override fun getUserByNumber(number: String): User? {
+        TODO("Not yet implemented")
+    }
+
     override fun getById(id: String): User? {
         return userDao.getById(id)
     }
