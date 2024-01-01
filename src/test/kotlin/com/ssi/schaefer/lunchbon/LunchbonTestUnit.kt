@@ -21,7 +21,7 @@ class LunchbonTestUnit {
         assertEquals(userId, lunchbon.userId)
         assertEquals(restaurant, lunchbon.restaurant)
         assertEquals(timestamp, lunchbon.timestamp)
-        assertEquals(null, lunchbon.timestampAsDateString+1)
+        assertEquals(null, lunchbon.timestampAsDateString+2)
 
         // When
         lunchbon.formatTimeStamp(timeZoneId)
