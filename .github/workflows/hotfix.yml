@@ -56,22 +56,3 @@ jobs:
       - name: delete hotfix branch
         run: |
           git branch -D "${CURRENT_BRANCH}"
-        if: success()
-
-      - name: Build & push Docker image
-        id: docker
-        uses: mr-smithers-excellent/docker-build-push@v6
-        with:
-          image: "${{ env.DOCKER_IMAGE_NAME }}"
-          tags: "latest"
-          registry: "${{ env.DOCKER_REGISTRY }}"
-          dockerfile: Dockerfile
-          username: "${{ env.DOCKER_USERNAME }}"
-          password: "${{ env.DOCKER_PASSWORD }}"
-
-      - name: Discord notification
-        env:
-          DISCORD_WEBHOOK: "${{ env.DISCORD_WEBHOOK }}"
-        uses: Ilshidur/action-discord@master
-        with:
-          args: '{{ env.DOCKER_IMAGE_TAGS }} Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
