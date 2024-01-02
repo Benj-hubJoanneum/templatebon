@@ -4,8 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       Version:
-      description: 'Version'
-      required: true
+        required: true
   
 env:
   GIT_USER_EMAIL: "actions@github.com"
