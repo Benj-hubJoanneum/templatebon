@@ -52,12 +52,6 @@ jobs:
         run: ./gradlew runIntegrationTests
         if: success()
 
-      - name: Merge test into dev
-        run: |
-          git checkout dev
-          git merge test
-        if: success()
-
       - name: Build & push Docker image
         id: docker
         uses: mr-smithers-excellent/docker-build-push@v6
