@@ -23,11 +23,14 @@ jobs:
           git config --global user.email "${{ env.GIT_USER_EMAIL }}"
           git config --global user.name "${{ env.GIT_USER_NAME }}"
 
+      - name: Fetch all branches from the remote repository
+        run: git fetch --all
+
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: 'adopt'
@@ -56,6 +59,7 @@ jobs:
           git merge "${CURRENT_BRANCH}"
         if: success()
 
-      - name: delete hotfix branch
+      - name: Delete hotfix branch
         run: |
           git branch -D "${CURRENT_BRANCH}"
+        if: success()
