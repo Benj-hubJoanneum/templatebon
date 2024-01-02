@@ -68,4 +68,4 @@ jobs:
           DISCORD_WEBHOOK: "${{ env.DISCORD_WEBHOOK }}"
         uses: Ilshidur/action-discord@master
         with:
-          args: '${{ env.DOCKER_IMAGE_TAGS }} Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
+          args: 'Version: ${{ env.DOCKER_IMAGE_TAGS }} of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
