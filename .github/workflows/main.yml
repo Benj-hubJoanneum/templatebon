@@ -11,7 +11,7 @@ env:
   GIT_USER_EMAIL: "actions@github.com"
   GIT_USER_NAME: "GitHub Actions"
   DOCKER_IMAGE_NAME: "dockerbenj/lunchbon_backend"
-  DOCKER_IMAGE_TAGS: ${{ github.event.inputs.environment }}
+  DOCKER_IMAGE_TAGS: ${{ github.event.inputs.Version }}
   DOCKER_REGISTRY: "docker.io"
   DISCORD_WEBHOOK: ${{ secrets.DISCORD_TOKEN }}
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -68,4 +68,4 @@ jobs:
           DISCORD_WEBHOOK: "${{ env.DISCORD_WEBHOOK }}"
         uses: Ilshidur/action-discord@master
         with:
-          args: '{{ env.DOCKER_IMAGE_TAGS }} Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
+          args: '${{ env.DOCKER_IMAGE_TAGS }} Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
