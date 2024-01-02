@@ -47,5 +47,5 @@ jobs:
 
       - name: Merge feature into dev
         run: |
-          git checkout dev
+          git checkout origin/dev
           git merge "${CURRENT_BRANCH}"
