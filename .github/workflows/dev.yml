@@ -2,10 +2,6 @@ name: finish feature
 
 on:
   workflow_dispatch:
-    inputs:
-      Version:
-        description: branch
-        required: true
 
 env:
   GIT_USER_EMAIL: "actions@github.com"
@@ -56,4 +52,3 @@ jobs:
       - name: delete feature branch
         run: |
           git branch -D "${CURRENT_BRANCH}"
-        if: success()
