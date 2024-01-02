@@ -1,19 +1,14 @@
-name: Kotlin CI / CD with Gradle
+name: feature progress
 
 on:
   push:
     branches:
-      - 'test*'
+      - 'feature*'
 
 env:
   GIT_USER_EMAIL: "actions@github.com"
   GIT_USER_NAME: "GitHub Actions"
-  DOCKER_IMAGE_NAME: "dockerbenj/lunchbon_backend"
-  DOCKER_IMAGE_TAGS: "v1, latest"
-  DOCKER_REGISTRY: "docker.io"
-  DISCORD_WEBHOOK: ${{ secrets.DISCORD_TOKEN }}
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  CURRENT_BRANCH: ${{ github.event.ref }}
 
 jobs:
   build_and_test:
@@ -27,8 +22,6 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Fetch all history to allow resetting to any commit
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
@@ -52,54 +45,7 @@ jobs:
         run: ./gradlew runIntegrationTests
         if: success()
 
-      - name: Merge test into dev
+      - name: Merge feature into dev
         run: |
           git checkout dev
-          git merge test
-        if: success()
-
-#      - name: Upload build as artifact
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: app
-#          path: build
-#
-#  push_new_docker_image:
-#    needs: build_and_test
-#    runs-on: ubuntu-latest
-#    steps:
-#
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#
-#      - name: Set up JDK 17
-#        uses: actions/setup-java@v2
-#        with:
-#          java-version: 17
-#          distribution: 'adopt'
-#
-#      - name: Grant execute permission for gradlew
-#        run: chmod +x gradlew
-#
-#      - name: Download build artifact
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: app
-
-      - name: Build & push Docker image
-        id: docker
-        uses: mr-smithers-excellent/docker-build-push@v6
-        with:
-          image: "${{ env.DOCKER_IMAGE_NAME }}"
-          tags: "${{ env.DOCKER_IMAGE_TAGS }}"
-          registry: "${{ env.DOCKER_REGISTRY }}"
-          dockerfile: Dockerfile
-          username: "${{ env.DOCKER_USERNAME }}"
-          password: "${{ env.DOCKER_PASSWORD }}"
-
-      - name: Discord notification
-        env:
-          DISCORD_WEBHOOK: "${{ env.DISCORD_WEBHOOK }}"
-        uses: Ilshidur/action-discord@master
-        with:
-          args: 'New Version of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
+          git merge "${CURRENT_BRANCH}"
