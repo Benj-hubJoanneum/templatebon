@@ -22,7 +22,6 @@ class LunchbonTestUnit {
         assertEquals(restaurant, lunchbon.restaurant)
 
         assertEquals(timestamp, lunchbon.timestamp)
-
         assertEquals(null, lunchbon.timestampAsDateString)
 
         // When
