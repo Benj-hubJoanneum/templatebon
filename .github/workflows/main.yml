@@ -3,8 +3,8 @@ name: new release
 on:
   workflow_dispatch:
     inputs:
-      Version:
-        description: 'Version'
+      environment:
+        type: version
         required: true
 
 env:
