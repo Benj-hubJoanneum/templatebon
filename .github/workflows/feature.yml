@@ -3,7 +3,10 @@ name: feature progress
 on:
   push:
     branches:
-      - 'feature*'
+      - 'feature/*'
+  pull_request:
+    branches:
+      - 'feature/*'
 
 env:
   GIT_USER_EMAIL: "actions@github.com"
@@ -47,5 +50,5 @@ jobs:
 
       - name: Merge feature into dev
         run: |
-          git checkout dev
+          git checkout origin/dev
           git merge "${CURRENT_BRANCH}"

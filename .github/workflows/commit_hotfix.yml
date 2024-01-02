@@ -3,7 +3,10 @@ name: push hotfix
 on:
   push:
     branches:
-      - 'hotfix*'
+      - 'hotfix/*'
+  pull_request:
+    branches:
+      - 'hotfix/*'
 
 env:
   GIT_USER_EMAIL: "actions@github.com"
