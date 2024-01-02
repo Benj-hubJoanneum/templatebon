@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:.github/workflows/deployment.yml
-name: close feature
-========
 name: new release
->>>>>>>> main:.github/workflows/main.yml
 
 on:
   workflow_dispatch:
@@ -56,15 +52,6 @@ jobs:
         run: ./gradlew runIntegrationTests
         if: success()
 
-<<<<<<<< HEAD:.github/workflows/deployment.yml
-      - name: Merge test into dev
-        run: |
-          git checkout dev
-          git merge test
-        if: success()
-
-========
->>>>>>>> main:.github/workflows/main.yml
       - name: Build & push Docker image
         id: docker
         uses: mr-smithers-excellent/docker-build-push@v6
