@@ -53,26 +53,16 @@ jobs:
         run: |
           CURRENT_BRANCH=$(echo "${CURRENT_BRANCH}" | sed 's|refs/heads/||')
 
-      - name: Merge feature into dev and main
+      - name: Should_fail Merge feature into dev and main
         run: |
           git checkout dev
-          if git diff --quiet "${CURRENT_BRANCH}"; then
-            echo "No changes to merge into dev."
-          else
-            git merge --no-ff --no-commit "${CURRENT_BRANCH}"
-            git commit -m "Merge branch '${CURRENT_BRANCH}' into dev" --allow-empty
-          fi
-
+          git merge "${CURRENT_BRANCH}"
           git checkout main
-          if git diff --quiet "${CURRENT_BRANCH}"; then
-            echo "No changes to merge into main."
-          else
-            git merge --no-ff --no-commit "${CURRENT_BRANCH}"
-            git commit -m "Merge branch '${CURRENT_BRANCH}' into main" --allow-empty
-          fi
-        if: success()
+          git merge "${CURRENT_BRANCH}"
 
       - name: Delete feature branch
         run: |
           git branch -D "${CURRENT_BRANCH}"
         if: success()
+
+
