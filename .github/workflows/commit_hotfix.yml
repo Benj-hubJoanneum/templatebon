@@ -22,6 +22,7 @@ jobs:
         run: |
           git config --global user.email "${{ env.GIT_USER_EMAIL }}"
           git config --global user.name "${{ env.GIT_USER_NAME }}"
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -59,10 +60,6 @@ jobs:
           git merge "${CURRENT_BRANCH}"
           git checkout main
           git merge "${CURRENT_BRANCH}"
-        if: success()
-
-      - name: Checkout hotfix branch
-        run: git checkout "${CURRENT_BRANCH}"
         if: success()
 
       - name: Delete hotfix branch

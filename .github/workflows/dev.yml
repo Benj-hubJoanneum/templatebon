@@ -23,16 +23,9 @@ jobs:
           git config --global user.name "${{ env.GIT_USER_NAME }}"
 
       - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Extract branch name
-        run: |
-          CURRENT_BRANCH=$(echo "${CURRENT_BRANCH}" | sed 's|refs/heads/||')
-
-      - name: Push changes
-        run: |
-          git push origin dev
-          git push origin main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Extract branch name
         run: |
