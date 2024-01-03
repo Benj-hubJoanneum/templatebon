@@ -56,16 +56,23 @@ jobs:
       - name: Merge feature into dev and main
         run: |
           git checkout dev
-          git merge --no-ff --no-commit "${CURRENT_BRANCH}"
-          git commit -m "Merge branch '${CURRENT_BRANCH}' into dev" --allow-empty
+          if git diff --quiet "${CURRENT_BRANCH}"; then
+            echo "No changes to merge into dev."
+          else
+            git merge --no-ff --no-commit "${CURRENT_BRANCH}"
+            git commit -m "Merge branch '${CURRENT_BRANCH}' into dev" --allow-empty
+          fi
+
           git checkout main
-          git merge --no-ff --no-commit "${CURRENT_BRANCH}"
-          git commit -m "Merge branch '${CURRENT_BRANCH}' into main" --allow-empty
+          if git diff --quiet "${CURRENT_BRANCH}"; then
+            echo "No changes to merge into main."
+          else
+            git merge --no-ff --no-commit "${CURRENT_BRANCH}"
+            git commit -m "Merge branch '${CURRENT_BRANCH}' into main" --allow-empty
+          fi
         if: success()
 
       - name: Delete feature branch
         run: |
           git branch -D "${CURRENT_BRANCH}"
         if: success()
-
-
