@@ -48,3 +48,13 @@ jobs:
       - name: Run Integration Tests
         run: ./gradlew runIntegrationTests
         if: success()
+
+      - name: Extract branch name
+        run: echo "CURRENT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+      - name: Merge feature into dev
+        run: |
+          git checkout dev
+          git merge "${CURRENT_BRANCH}"
+          git push origin dev
+        if: success()
