@@ -10,7 +10,6 @@ on:
 env:
   GIT_USER_EMAIL: "actions@github.com"
   GIT_USER_NAME: "GitHub Actions"
-  CURRENT_BRANCH: ${{ github.event.ref }}
   CURRENT_BRANCH2: ${{ github.event.inputs.Version }}
 
 jobs:

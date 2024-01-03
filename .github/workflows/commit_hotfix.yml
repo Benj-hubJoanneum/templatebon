@@ -11,7 +11,6 @@ on:
 env:
   GIT_USER_EMAIL: "actions@github.com"
   GIT_USER_NAME: "GitHub Actions"
-  CURRENT_BRANCH: ${{ github.event.ref }}
 
 jobs:
   build_and_test:
@@ -51,8 +50,7 @@ jobs:
         if: success()
 
       - name: Extract branch name
-        run: |
-          CURRENT_BRANCH=$(echo "${CURRENT_BRANCH}" | sed 's|refs/heads/||')
+        run: echo "CURRENT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       - name: Merge test into dev and main
         run: |
