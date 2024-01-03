@@ -58,3 +58,4 @@ jobs:
         run: |
           git checkout dev
           git merge "${CURRENT_BRANCH}"
+          if: success
