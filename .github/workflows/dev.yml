@@ -24,15 +24,12 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Extract branch name
         run: |
           CURRENT_BRANCH=$(echo "${CURRENT_BRANCH}" | sed 's|refs/heads/||')
-
-      - name: Push changes
-        run: |
-          git push origin dev
-          git push origin main
 
       - name: Extract branch name
         run: |
