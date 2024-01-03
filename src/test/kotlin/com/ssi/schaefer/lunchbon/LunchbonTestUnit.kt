@@ -24,6 +24,7 @@ class LunchbonTestUnit {
         assertEquals(restaurant, lunchbon.restaurant)
         assertEquals(timestamp, lunchbon.timestamp)
         //this is a featureupdate
+        //this is second featureupdate
         assertEquals(null, lunchbon.timestampAsDateString)
 
         // When
