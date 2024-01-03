@@ -31,6 +31,10 @@ jobs:
         run: |
           CURRENT_BRANCH=$(echo "${CURRENT_BRANCH}" | sed 's|refs/heads/||')
 
+      - name: Extract branch name
+        run: |
+          CURRENT_BRANCH=$(echo "${CURRENT_BRANCH}" | sed 's|refs/heads/||')
+
       - name: Merge feature into dev and main
         run: |
           git checkout dev
