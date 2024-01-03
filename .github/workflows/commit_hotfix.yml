@@ -54,9 +54,9 @@ jobs:
 
       - name: Merge hotfix into main
         run: |
-          git checkout main
+          git checkout dev
           git merge "${CURRENT_BRANCH}"
-          git push origin main
+          git push origin dev
         if: success()
 
       - name: Delete hotfix branch
