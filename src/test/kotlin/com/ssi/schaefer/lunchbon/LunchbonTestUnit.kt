@@ -21,6 +21,7 @@ class LunchbonTestUnit {
         assertEquals(userId, lunchbon.userId)
         //hotfixtest
         //hotfixtest
+        //should show hotfix in dev and main
         assertEquals(restaurant, lunchbon.restaurant)
         assertEquals(timestamp, lunchbon.timestamp)
         //this is a featureupdate
