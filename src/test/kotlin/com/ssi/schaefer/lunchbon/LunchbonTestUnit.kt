@@ -22,8 +22,8 @@ class LunchbonTestUnit {
         //hotfixtest
         //hotfixtest
         assertEquals(restaurant, lunchbon.restaurant)
+        //should show in main and dev
         assertEquals(timestamp, lunchbon.timestamp)
-        //this is a featureupdate
         assertEquals(null, lunchbon.timestampAsDateString)
 
         // When
