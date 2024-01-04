@@ -67,6 +67,8 @@ jobs:
           git checkout origin/dev
           git merge "${CURRENT_BRANCH}"
           git push origin/dev
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
         if: success()
 
   code_analysis:
