@@ -52,12 +52,13 @@ jobs:
       - name: Extract branch name
         run: echo "CURRENT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
-      - name: Merge hotfix into main
+      - name: Merge hotfix into dev
         run: |
-          git checkout main
+          git checkout dev
           git merge --ff-only "${CURRENT_BRANCH}"
         env:
           GH_TOKEN: ${{ secrets.GITHUBTOKEN }}
+
       - name: Delete hotfix branch
         run: |
           git branch -D "${CURRENT_BRANCH}"
