@@ -21,6 +21,7 @@ class LunchbonTestUnit {
         assertEquals(userId, lunchbon.userId)
         assertEquals(restaurant, lunchbon.restaurant)
         assertEquals(timestamp, lunchbon.timestamp)
+        //want to see in dev then in main
         assertEquals(null, lunchbon.timestampAsDateString)
 
         // When
