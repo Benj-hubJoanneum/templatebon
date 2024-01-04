@@ -57,7 +57,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUBTOKEN }}
           source_ref: ${CURRENT_BRANCH}
-          target_branch: 'dev'
+          target_branch: 'origin/dev'
 
   code_analysis:
     runs-on: ubuntu-latest
