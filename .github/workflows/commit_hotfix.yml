@@ -53,26 +53,31 @@ jobs:
     needs: build_and_test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Extract branch name
         run: echo "CURRENT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
-      - name: Merge development -> staging
-        uses: devmasx/merge-branch@master
-        with:
-          type: now
-          from_branch: ${CURRENT_BRANCH}
-          target_branch: dev
-          github_token: ${{ secrets.GITHUBTOKEN }}
+      - name: Push hotfix into dev
+        run: |
+          git push origin dev
+        if: success()
 
-      - name: Merge staging -> dev
-        uses: devmasx/merge-branch@master
-        with:
-          type: now
-          from_branch: staging
-          target_branch: dev
-          github_token: ${{ secrets.GITHUBTOKEN }}
+  code_analysis:
+    runs-on: ubuntu-latest
+    needs: sync-branch
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Checkstyle
+        run: |
+          curl -L -o checkstyle.zip https://github.com/checkstyle/checkstyle/releases/download/checkstyle-8.48/checkstyle-8.48-all.jar
+          unzip checkstyle.zip
+          java -jar checkstyle-8.48-all.jar -c sun_checks.xml src/
 
   cleanup:
     needs: sync-branch
@@ -85,3 +90,4 @@ jobs:
         run: |
           git branch -D "${CURRENT_BRANCH}"
         if: success()
+

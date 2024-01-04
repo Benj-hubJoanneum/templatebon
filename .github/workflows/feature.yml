@@ -52,16 +52,33 @@ jobs:
       - name: Extract branch name
         run: echo "CURRENT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
-      - name: Merge feature into dev
-        uses: everlytic/branch-merge@1.1.2
+      - name: Push feature into dev
+        run: |
+          git checkout origin/dev
+          git merge "${CURRENT_BRANCH}"
+          git push origin dev
+        if: success()
+
+  sync-branch:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          github_token: ${{ secrets.GITHUBTOKEN }}
-          source_ref: ${CURRENT_BRANCH}
-          target_branch: 'origin/dev'
+          fetch-depth: 0
+
+      - name: Extract branch name
+        run: echo "CURRENT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+      - name: Push hotfix into dev
+        run: |
+          git push origin dev
+        if: success()
 
   code_analysis:
     runs-on: ubuntu-latest
-    needs: build_and_test
+    needs: sync-branch
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
