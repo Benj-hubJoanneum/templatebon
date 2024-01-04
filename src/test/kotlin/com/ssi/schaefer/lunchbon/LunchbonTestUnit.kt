@@ -25,6 +25,7 @@ class LunchbonTestUnit {
         //afeature
 
         assertEquals(null, lunchbon.timestampAsDateString)
+        //feat
 
         // When
         lunchbon.formatTimeStamp(timeZoneId)
