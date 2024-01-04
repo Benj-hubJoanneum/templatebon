@@ -56,7 +56,8 @@ jobs:
         run: |
           git checkout dev
           git merge "${CURRENT_BRANCH}"
-          git push origin dev
+        env:
+          GH_TOKEN: ${{ secrets.FORCE_PUSH_TOKEN }}
         if: success()
 
       - name: Delete hotfix branch
