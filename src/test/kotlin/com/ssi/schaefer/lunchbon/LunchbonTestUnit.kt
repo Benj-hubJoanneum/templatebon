@@ -19,10 +19,7 @@ class LunchbonTestUnit {
 
         // Then
         assertEquals(userId, lunchbon.userId)
-        //hotfixtest
-        //hotfixtest
         assertEquals(restaurant, lunchbon.restaurant)
-        //should show in main and dev
         assertEquals(timestamp, lunchbon.timestamp)
         assertEquals(null, lunchbon.timestampAsDateString)
 
