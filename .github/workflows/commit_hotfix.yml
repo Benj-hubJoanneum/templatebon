@@ -54,7 +54,7 @@ jobs:
 
       - name: Merge hotfix into main
         run: |
-          git checkout dev
+          git checkout origin/main
           git merge "${CURRENT_BRANCH}"
         env:
           GH_TOKEN: ${{ secrets.FORCE_PUSH_TOKEN }}
