@@ -64,9 +64,9 @@ jobs:
 
       - name: Push feature into dev
         run: |
-          git checkout dev
+          git checkout origin/dev
           git merge "${CURRENT_BRANCH}"
-          git push dev
+          git push origin/dev
         if: success()
 
   code_analysis:
