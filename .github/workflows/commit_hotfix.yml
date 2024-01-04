@@ -58,6 +58,7 @@ jobs:
           git merge --ff-only "${CURRENT_BRANCH}"
         env:
           GH_TOKEN: ${{ secrets.GITHUBTOKEN }}
+
       - name: Delete hotfix branch
         run: |
           git branch -D "${CURRENT_BRANCH}"
