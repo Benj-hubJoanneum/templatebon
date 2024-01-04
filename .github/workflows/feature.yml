@@ -64,9 +64,9 @@ jobs:
 
       - name: Push feature into dev
         run: |
-          git checkout origin/dev
+          git checkout dev
           git merge "${CURRENT_BRANCH}"
-          git push origin/dev
+          git push origin dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
         if: success()
