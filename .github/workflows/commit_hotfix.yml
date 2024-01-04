@@ -1,6 +1,9 @@
 name: commit hotfix
 
 on:
+  push:
+    branches:
+      - 'hotfix/*'
   pull_request:
     branches:
       - 'hotfix/*'

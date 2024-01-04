@@ -55,8 +55,8 @@ jobs:
       - name: Merge feature into dev
         uses: everlytic/branch-merge@1.1.2
         with:
-          github_token: ${{ github.token }}
-          source_ref: ${{ github.ref }}
+          github_token: ${{ secrets.GITHUBTOKEN }}
+          source_ref: ${CURRENT_BRANCH}
           target_branch: 'dev'
 
   code_analysis:
