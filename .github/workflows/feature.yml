@@ -76,11 +76,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: sync-branch
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Run Checkstyle
-        run: |
-          curl -L -o checkstyle.zip https://github.com/checkstyle/checkstyle/releases/download/checkstyle-8.48/checkstyle-8.48-all.jar
-          unzip checkstyle.zip
-          java -jar checkstyle-8.48-all.jar -c sun_checks.xml src/
+      - uses: actions/checkout@v4
+      - uses: dbelyaev/action-checkstyle@master
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          level: warning
