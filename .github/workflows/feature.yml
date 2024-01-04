@@ -64,6 +64,7 @@ jobs:
 
       - name: Push feature into dev
         run: |
+          git fetch origin dev
           git checkout dev
           git merge "${CURRENT_BRANCH}"
           git push origin dev
