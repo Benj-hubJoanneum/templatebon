@@ -21,7 +21,6 @@ jobs:
         run: |
           git config --global user.email "${{ env.GIT_USER_EMAIL }}"
           git config --global user.name "${{ env.GIT_USER_NAME }}"
-
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -54,10 +53,15 @@ jobs:
 
       - name: Merge hotfix into main
         run: |
-          git checkout origin/main
+          git fetch origin main:main
+          git checkout main
           git merge "${CURRENT_BRANCH}"
         env:
           GH_TOKEN: ${{ secrets.FORCE_PUSH_TOKEN }}
+        if: success()
+
+      - name: Push changes to main
+        run: git push origin main
         if: success()
 
       - name: Delete hotfix branch
