@@ -22,7 +22,8 @@ class LunchbonTestUnit {
         assertEquals(restaurant, lunchbon.restaurant)
         //test the test-it hotfix
         assertEquals(timestamp, lunchbon.timestamp)
-        //its a new feature
+        //afeature
+
         assertEquals(null, lunchbon.timestampAsDateString)
 
         // When
