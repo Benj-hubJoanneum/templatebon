@@ -47,6 +47,7 @@ jobs:
         if: success()
 
   sync-branch:
+    needs: build_and_test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -71,6 +72,7 @@ jobs:
           github_token: ${{ secrets.GITHUBTOKEN }}
 
   cleanup:
+    needs: sync-branch
     runs-on: ubuntu-latest
     steps:
       - name: Extract branch name
