@@ -63,7 +63,7 @@ jobs:
           target_branch: dev
           github_token: ${{ secrets.GITHUBTOKEN }}
 
-      - name: Merge staging -> uat
+      - name: Merge staging -> dev
         uses: devmasx/merge-branch@master
         with:
           type: now
