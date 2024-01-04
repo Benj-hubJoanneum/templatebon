@@ -44,7 +44,7 @@ Pushing code without tests is generally not allowed in this organisation
 
 1. Commit code with short and direct description \
    ![Image1](imageResources/image1.png)
-2. Change to Pull Request Tab\
+2. Change to Pull Request Tab \
    ![Image2](imageResources/image2.png)
 3. Create Pull Request with the same description of the commit \
    ![Image3](imageResources/image3.png)
