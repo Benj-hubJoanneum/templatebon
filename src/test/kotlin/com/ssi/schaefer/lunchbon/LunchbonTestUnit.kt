@@ -20,7 +20,7 @@ class LunchbonTestUnit {
         // Then
         assertEquals(userId, lunchbon.userId)
         assertEquals(restaurant, lunchbon.restaurant)
-        //test the test-it hotfix
+        //hotfix
         assertEquals(timestamp, lunchbon.timestamp)
         //afeature
 
