@@ -23,6 +23,7 @@ class LunchbonTestUnit {
         //test the test-it hotfix
         assertEquals(timestamp, lunchbon.timestamp)
         //afeature
+
         assertEquals(null, lunchbon.timestampAsDateString)
 
         // When
