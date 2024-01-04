@@ -5,6 +5,14 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.3"
 	id("org.jetbrains.kotlin.jvm") version "1.8.21"
 	id("org.jetbrains.kotlin.plugin.spring") version "1.8.21"
+	id("org.sonarqube") version "4.4.1.3373"
+}
+
+sonar {
+	properties {
+		property("sonar.projectKey", "lunchbon")
+		property("sonar.projectName", "lunchbon")
+	}
 }
 
 group = "com.ssi.schaefer.lunchbon"
