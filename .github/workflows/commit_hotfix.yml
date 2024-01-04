@@ -58,7 +58,9 @@ jobs:
 
       - name: Push hotfix into dev
         run: |
-          git push origin dev
+          git checkout origin/dev
+          git merge "${CURRENT_BRANCH}"
+          git push origin/dev
         if: success()
 
   code_analysis:
