@@ -46,15 +46,35 @@ jobs:
         run: ./gradlew runIntegrationTests
         if: success()
 
+  sync-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
       - name: Extract branch name
         run: echo "CURRENT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
-      - name: Merge hotfix into dev
-        run: |
-          git checkout origin/dev
-          git merge --ff-only "${CURRENT_BRANCH}"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUBTOKEN }}
+      - name: Merge development -> staging
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: ${CURRENT_BRANCH}
+          target_branch: dev
+          github_token: ${{ secrets.GITHUBTOKEN }}
+
+      - name: Merge staging -> uat
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: staging
+          target_branch: dev
+          github_token: ${{ secrets.GITHUBTOKEN }}
+
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract branch name
+        run: echo "CURRENT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       - name: Delete hotfix branch
         run: |
