@@ -55,36 +55,36 @@ jobs:
         run: ./gradlew runIntegrationTests
         if: success()
 
-  Sonar:
-      runs-on: ubuntu-latest
-      permissions: read-all
-      steps:
-        - uses: actions/checkout@v2
-          with:
-            fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-        - name: Set up JDK 17
-          uses: actions/setup-java@v1
-          with:
-            java-version: 17
-        - name: Grant execute permission for gradlew
-          run: chmod +x gradlew
-        - name: Cache SonarQube packages
-          uses: actions/cache@v1
-          with:
-            path: ~/.sonar/cache
-            key: ${{ runner.os }}-sonar
-            restore-keys: ${{ runner.os }}-sonar
-        - name: Cache Gradle packages
-          uses: actions/cache@v1
-          with:
-            path: ~/.gradle/caches
-            key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-            restore-keys: ${{ runner.os }}-gradle
-        - name: Build and analyze
-          env:
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-            SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          run: ./gradlew build sonar --info
+#  Sonar:
+#      runs-on: ubuntu-latest
+#      permissions: read-all
+#      steps:
+#        - uses: actions/checkout@v2
+#          with:
+#            fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+#        - name: Set up JDK 17
+#          uses: actions/setup-java@v1
+#          with:
+#            java-version: 17
+#        - name: Grant execute permission for gradlew
+#          run: chmod +x gradlew
+#        - name: Cache SonarQube packages
+#          uses: actions/cache@v1
+#          with:
+#            path: ~/.sonar/cache
+#            key: ${{ runner.os }}-sonar
+#            restore-keys: ${{ runner.os }}-sonar
+#        - name: Cache Gradle packages
+#          uses: actions/cache@v1
+#          with:
+#            path: ~/.gradle/caches
+#            key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+#            restore-keys: ${{ runner.os }}-gradle
+#        - name: Build and analyze
+#          env:
+#            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#            SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+#          run: ./gradlew build sonar --info
 
   deploy_docker_image:
     needs: build_and_test
@@ -126,7 +126,7 @@ jobs:
           args: 'Version: ${{ env.DOCKER_IMAGE_TAGS }} of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
 
   deploy_on_aws_and_run:
-    needs: [ build_and_test, Sonar ]
+    needs: [ deploy_docker_image ]
     runs-on: ubuntu-latest
     steps:
       - name: Set up SSH connection
@@ -138,4 +138,19 @@ jobs:
         run: |
           EC2_HOST="${{ secrets.AWS_IP }}"
           IMAGE_NAME="${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAGS }}"
+<<<<<<< HEAD
           ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST "docker pull $IMAGE_NAME && docker run -d --restart unless-stopped -p 80:80 $IMAGE_NAME"
+=======
+          ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST "docker pull $IMAGE_NAME && docker run -d --restart unless-stopped -p 80:80 $IMAGE_NAME"
+
+  naughtyfication:
+    needs: [ deploy_on_aws_and_run ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: "${{ env.DISCORD_WEBHOOK }}"
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'Version: ${{ env.DOCKER_IMAGE_TAGS }} of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
+>>>>>>> a4b97085ed9d69297dd39fc3b0b2984cc43091df

@@ -63,11 +63,9 @@ tasks.register<Test>("runUnitTests") {
 	}
 }
 
-
 tasks.register<Test>("runIntegrationTests") {
 	useJUnitPlatform {
 		includeTags("integration")
 		excludeTags("*")
 	}
 }
-
