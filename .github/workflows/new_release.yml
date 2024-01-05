@@ -120,7 +120,7 @@ jobs:
           password: "${{ env.DOCKER_PASSWORD }}"
 
   deploy_on_aws_and_run:
-    needs: [ build_and_test ]
+    needs: [ deploy_docker_image ]
     runs-on: ubuntu-latest
     steps:
       - name: Set up SSH connection
@@ -134,6 +134,10 @@ jobs:
           IMAGE_NAME="${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAGS }}"
           ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST "docker pull $IMAGE_NAME && docker run -d --restart unless-stopped -p 80:80 $IMAGE_NAME"
 
+  naughtyfication:
+    needs: [ deploy_on_aws_and_run ]
+    runs-on: ubuntu-latest
+    steps:
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: "${{ env.DISCORD_WEBHOOK }}"
