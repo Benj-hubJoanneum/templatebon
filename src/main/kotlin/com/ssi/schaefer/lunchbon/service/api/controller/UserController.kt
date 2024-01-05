@@ -95,7 +95,6 @@ class UserController @Autowired constructor(
         }
     }
 
-    //change
     @GetMapping("/users")
     fun getUsers(): List<User?> {
         return userService.getAllUsers()

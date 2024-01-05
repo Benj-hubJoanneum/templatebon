@@ -118,6 +118,12 @@ jobs:
           dockerfile: Dockerfile
           username: "${{ env.DOCKER_USERNAME }}"
           password: "${{ env.DOCKER_PASSWORD }}"
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: "${{ env.DISCORD_WEBHOOK }}"
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'Version: ${{ env.DOCKER_IMAGE_TAGS }} of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
 
   deploy_on_aws_and_run:
     needs: [ build_and_test, Sonar ]
@@ -133,10 +139,3 @@ jobs:
           EC2_HOST="${{ secrets.AWS_IP }}"
           IMAGE_NAME="${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAGS }}"
           ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST "docker pull $IMAGE_NAME && docker run -d --restart unless-stopped -p 80:80 $IMAGE_NAME"
-
-      - name: Discord notification
-        env:
-          DISCORD_WEBHOOK: "${{ env.DISCORD_WEBHOOK }}"
-        uses: Ilshidur/action-discord@master
-        with:
-          args: 'Version: ${{ env.DOCKER_IMAGE_TAGS }} of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'

@@ -78,6 +78,9 @@ The workflow is triggered manually by using the "workflow_dispatch" event, allow
 - **DISCORD_WEBHOOK**: Discord webhook for release notifications.
 - **DOCKER_USERNAME**: Docker username from user
 - **DOCKER_PASSWORD**: Docker password from user
+- **AWS_SSH**: AWS ssh private key
+- **AWS_IP**: AWS IP address of the instance
+- **AWS_DNS**: AWS DNS of the instance
 
 ## Workflow Steps
 
@@ -90,6 +93,7 @@ The workflow is triggered manually by using the "workflow_dispatch" event, allow
 7. **Run Integration Tests**: Executes integration tests for the project.
 8. **Build & push Docker image**: Builds the Docker image and pushes it to the specified registry.
 9. **Discord notification**: Sends a notification to Discord indicating the availability of the new release.
+10. **Deploy on AWS and run**: Connects via ssh session the the AWS instance pulls the docker image and restarts the docker container
 
 #### feature_progress.yml
 
