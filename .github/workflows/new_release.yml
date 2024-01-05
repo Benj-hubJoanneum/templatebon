@@ -120,7 +120,7 @@ jobs:
           password: "${{ env.DOCKER_PASSWORD }}"
 
   deploy_on_aws_and_run:
-    needs: [ build_and_test, Sonar ]
+    needs: [ build_and_test ]
     runs-on: ubuntu-latest
     steps:
       - name: Set up SSH connection
