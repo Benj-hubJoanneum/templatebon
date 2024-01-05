@@ -138,9 +138,6 @@ jobs:
         run: |
           EC2_HOST="${{ secrets.AWS_IP }}"
           IMAGE_NAME="${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAGS }}"
-<<<<<<< HEAD
-          ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST "docker pull $IMAGE_NAME && docker run -d --restart unless-stopped -p 80:80 $IMAGE_NAME"
-=======
           ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST "docker pull $IMAGE_NAME && docker run -d --restart unless-stopped -p 80:80 $IMAGE_NAME"
 
   naughtyfication:
@@ -153,4 +150,4 @@ jobs:
         uses: Ilshidur/action-discord@master
         with:
           args: 'Version: ${{ env.DOCKER_IMAGE_TAGS }} of {{ EVENT_PAYLOAD.repository.full_name }} is now available!'
->>>>>>> a4b97085ed9d69297dd39fc3b0b2984cc43091df
+
