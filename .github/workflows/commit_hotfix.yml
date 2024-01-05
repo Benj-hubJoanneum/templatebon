@@ -90,5 +90,6 @@ jobs:
 
       - name: Delete hotfix branch
         run: |
+          git checkout dev
           git branch -D "${CURRENT_BRANCH}"
         if: success()
