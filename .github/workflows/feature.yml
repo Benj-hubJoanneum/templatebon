@@ -17,10 +17,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set Git identity
-        run: |
-          git config --global user.email "${{ env.GIT_USER_EMAIL }}"
-          git config --global user.name "${{ env.GIT_USER_NAME }}"
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -49,26 +45,29 @@ jobs:
         run: ./gradlew runIntegrationTests
         if: success()
 
+  sync-branch:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Git identity
+        run: |
+          git config --global user.email "${{ env.GIT_USER_EMAIL }}"
+          git config --global user.name "${{ env.GIT_USER_NAME }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Extract branch name
         run: echo "CURRENT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
-      - name: Merge feature into main
+      - name: Push feature into dev
         run: |
-          git checkout main
+          git fetch origin dev
+          git checkout dev
           git merge "${CURRENT_BRANCH}"
+          git push origin dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
         if: success()
-
-  ktlint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: |
-          curl -sSLO https://github.com/pinterest/ktlint/releases/download/0.44.0/ktlint && chmod a+x ktlint && sudo mv ktlint /usr/local/bin/
-      - name: run ktlint
-        run: |
-          ktlint --reporter=checkstyle,output=build/ktlint-report.xml
-        continue-on-error: true
-      - uses: yutailang0119/action-ktlint@v3
-        with:
-          report-path: build/*.xml # Support glob patterns by https://www.npmjs.com/package/@actions/glob
-        continue-on-error: false # If annotations contain error of severity, action-ktlint exit 1.

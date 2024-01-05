@@ -18,8 +18,10 @@ class LunchbonTestUnit {
         val lunchbon = Lunchbon(userId, restaurant, timestamp, null)
 
         // Then
+        //da ding
         assertEquals(userId, lunchbon.userId)
         assertEquals(restaurant, lunchbon.restaurant)
+        //fi fi
         assertEquals(timestamp, lunchbon.timestamp)
         assertEquals(null, lunchbon.timestampAsDateString)
 

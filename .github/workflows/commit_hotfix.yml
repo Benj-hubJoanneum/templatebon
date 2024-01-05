@@ -17,11 +17,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set Git identity
-        run: |
-          git config --global user.email "${{ env.GIT_USER_EMAIL }}"
-          git config --global user.name "${{ env.GIT_USER_NAME }}"
-
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -49,17 +44,52 @@ jobs:
         run: ./gradlew runIntegrationTests
         if: success()
 
+  sync-branch:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Git identity
+        run: |
+          git config --global user.email "${{ env.GIT_USER_EMAIL }}"
+          git config --global user.name "${{ env.GIT_USER_NAME }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Extract branch name
         run: echo "CURRENT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
-      - name: Merge hotfix into dev
+      - name: Push hotfix into dev
         run: |
+          git fetch origin dev
           git checkout dev
-          git merge --ff-only "${CURRENT_BRANCH}"
+          git merge "${CURRENT_BRANCH}"
+          git push origin dev
         env:
-          GH_TOKEN: ${{ secrets.GITHUBTOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+        if: success()
+
+  cleanup:
+    needs: sync-branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Git identity
+        run: |
+          git config --global user.email "${{ env.GIT_USER_EMAIL }}"
+          git config --global user.name "${{ env.GIT_USER_NAME }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract branch name
+        run: echo "CURRENT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       - name: Delete hotfix branch
         run: |
+          git checkout dev
           git branch -D "${CURRENT_BRANCH}"
         if: success()
