@@ -48,6 +48,11 @@ jobs:
     needs: build_and_test
     runs-on: ubuntu-latest
     steps:
+      - name: Set Git identity
+        run: |
+          git config --global user.email "${{ env.GIT_USER_EMAIL }}"
+          git config --global user.name "${{ env.GIT_USER_NAME }}"
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
