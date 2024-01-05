@@ -20,7 +20,7 @@ class LunchbonTestUnit {
         // Then
         assertEquals(userId, lunchbon.userId)
         assertEquals(restaurant, lunchbon.restaurant)
-        //feat
+        //hot fix change to get it working
         assertEquals(timestamp, lunchbon.timestamp)
         assertEquals(null, lunchbon.timestampAsDateString)
 
