@@ -128,7 +128,7 @@ jobs:
       - name: Connect EC2 instance and run Docker container
         run: |
           IMAGE_NAME="${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAGS }}"
-          ssh -i "${{ secrets.AWS_SSH }}" ubuntu@${{ env.AWS_HOST }}
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ env.AWS_HOST }}
 
   naughtyfication:
     needs: [ deploy_docker_image ]
