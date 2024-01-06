@@ -18,7 +18,8 @@ env:
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   AWS_SSH: ${{ secrets.AWS_SSH }}
   AWS_IP: ${{ secrets.AWS_IP }}
-  AWS_DNS: ${{secrets.AWS_IP }}
+  AWS_DNS: ${{ secrets.AWS_IP }}
+  AWS_HOST: ${{ secrets.AWS_HOST }}
 
 jobs:
   build_and_test:
@@ -129,6 +130,8 @@ jobs:
     needs: [ deploy_docker_image ]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
       - name: Set up SSH connection
         uses: webfactory/ssh-agent@v0.5.3
         with:
@@ -136,9 +139,8 @@ jobs:
 
       - name: Connect EC2 instance and run Docker container
         run: |
-          EC2_HOST="${{ secrets.AWS_IP }}"
           IMAGE_NAME="${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAGS }}"
-          ssh -o StrictHostKeyChecking=no ubuntu@$EC2_HOST "docker pull $IMAGE_NAME && docker run -d --restart unless-stopped -p 80:80 $IMAGE_NAME"
+          ssh -i ubuntu@$AWS_HOST "docker pull $IMAGE_NAME && docker run -d --restart unless-stopped -p 80:80 $IMAGE_NAME"
 
   naughtyfication:
     needs: [ deploy_on_aws_and_run ]
