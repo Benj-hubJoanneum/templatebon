@@ -128,7 +128,7 @@ jobs:
       - name: Connect EC2 instance and run Docker container
         run: |
           IMAGE_NAME="${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAGS }}"
-          ssh -i "${{ secrets.AWS_SSH }}" ubuntu@$AWS_HOST "docker pull $IMAGE_NAME && docker run -d --restart unless-stopped -p 80:80 $IMAGE_NAME"
+          ssh -i "${{ secrets.AWS_SSH }}" ubuntu@${{ env.AWS_HOST }} "docker pull $IMAGE_NAME && docker run -d --restart unless-stopped -p 80:80 $IMAGE_NAME"
 
   naughtyfication:
     needs: [ deploy_docker_image ]
