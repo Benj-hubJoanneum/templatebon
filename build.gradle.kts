@@ -53,23 +53,19 @@ tasks.withType<KotlinCompile> {
 	}
 }
 
-val integrationTest = tasks.register<Test>("integrationTest") {
-	useJUnitPlatform {
-		includeTags("integration")
-		excludeTags("*")
-	}
+tasks.withType<Test> {
+	useJUnitPlatform()
 }
 
-val unitTest = tasks.named<Test>("test") {
+tasks.register<Test>("runUnitTests") {
 	useJUnitPlatform {
 		excludeTags("integration")
 	}
 }
 
-tasks.register("runUnitTests") {
-	dependsOn(unitTest)
-}
-
-tasks.register("runIntegrationTests") {
-	dependsOn(integrationTest)
+tasks.register<Test>("runIntegrationTests") {
+	useJUnitPlatform {
+		includeTags("integration")
+		excludeTags("*")
+	}
 }
