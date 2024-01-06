@@ -8,7 +8,7 @@ WORKDIR /app
 COPY build/libs/Lunchbon_Backend-0.0.1-SNAPSHOT.jar .
 
 # Expose port of Spring Boot application
-EXPOSE 8080
+EXPOSE 80
 
 # Command to run application
 ENTRYPOINT ["java", "-jar", "Lunchbon_Backend-0.0.1-SNAPSHOT.jar"]
