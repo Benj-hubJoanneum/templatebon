@@ -22,7 +22,7 @@ env:
   AWS_HOST: ${{ secrets.AWS_HOST }}
 
 jobs:
-  build_and_test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -66,7 +66,7 @@ jobs:
 
 
   test:
-    needs: build_and_test
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
@@ -100,7 +100,7 @@ jobs:
           path: resources/build
 
   deploy_docker_image:
-    needs: build_and_test
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
