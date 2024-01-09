@@ -83,7 +83,7 @@ jobs:
           path: resources/build
 
   sync-branch:
-    needs: build_and_test
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Set Git identity
