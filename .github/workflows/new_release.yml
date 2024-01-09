@@ -30,6 +30,7 @@ jobs:
         run: |
           git config --global user.email "${{ env.GIT_USER_EMAIL }}"
           git config --global user.name "${{ env.GIT_USER_NAME }}"
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -70,6 +71,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Download artifact
         uses: actions/download-artifact@master
         with:
