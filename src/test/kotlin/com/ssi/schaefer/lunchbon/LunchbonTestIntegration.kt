@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest
 @Tag("integration")
 @SpringBootTest
 class LunchbonTestIntegration {
-    //fif fifif
+
     @Test
     fun `franz should run some dings`() {
         assert(true)
