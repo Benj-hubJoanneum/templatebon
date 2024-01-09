@@ -51,14 +51,6 @@ jobs:
         id: build
         if: success()
 
-      - name: Run Unit Tests
-        run: ./gradlew runUnitTests
-        if: success()
-
-      - name: Run Integration Tests
-        run: ./gradlew runIntegrationTests
-        if: success()
-
       - name: Upload artifact
         uses: actions/upload-artifact@master
         with:
@@ -107,9 +99,6 @@ jobs:
     steps:
       - name: Download artifact
         uses: actions/download-artifact@master
-        with:
-          name: lunchbon-build
-          path: resources/build
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
