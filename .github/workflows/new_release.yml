@@ -110,7 +110,6 @@ jobs:
       - name: "ktlint"
         uses: "vroy/gha-kotlin-linter@v1"
 
-
   build_docker_image:
     needs: test
     runs-on: ubuntu-latest
