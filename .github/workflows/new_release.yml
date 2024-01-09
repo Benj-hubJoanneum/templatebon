@@ -120,12 +120,11 @@ jobs:
           username: "${{ env.DOCKER_USERNAME }}"
           password: "${{ env.DOCKER_PASSWORD }}"
 
-      - name: Temporarily save Docker image
-        uses: actions/upload-artifact@v2
+      - name: Upload artifact
+        uses: actions/upload-artifact@master
         with:
-          name: docker-artifact
-          path: path/to/artifacts
-          retention-days: 1
+          name: lunchbon-image
+          path: resources/image
 
   deploy_docker_image:
     needs: build_docker_image
@@ -135,17 +134,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Retrieve saved Docker image
-        uses: actions/download-artifact@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
-          name: docker-artifact
-          path: path/to/artifacts
+          java-version: 17
+          distribution: 'adopt'
 
-      - name: Docker load
-        run: |
-          cd path/to/artifacts
-          docker load < docker-image.tar
-          # docker_build_push.sh
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
       - name: Set up SSH connection
         uses: webfactory/ssh-agent@v0.5.3
