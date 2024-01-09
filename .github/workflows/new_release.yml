@@ -92,11 +92,14 @@ jobs:
           name: lunchbon-build
           path: resources/build
 
-  deploy_docker_image:
+  build_docker_image:
     needs: test
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Download artifact
         uses: actions/download-artifact@master
 
@@ -109,11 +112,6 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build
-        id: build
-        if: success()
-
       - name: Build & push Docker image
         id: docker
         uses: mr-smithers-excellent/docker-build-push@v6
@@ -124,6 +122,33 @@ jobs:
           dockerfile: Dockerfile
           username: "${{ env.DOCKER_USERNAME }}"
           password: "${{ env.DOCKER_PASSWORD }}"
+
+      - name: Temporarily save Docker image
+        uses: actions/upload-artifact@v2
+        with:
+          name: docker-artifact
+          path: path/to/artifacts
+          retention-days: 1
+
+  deploy_docker_image:
+    needs: build_docker_image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Retrieve saved Docker image
+        uses: actions/download-artifact@v2
+        with:
+          name: docker-artifact
+          path: path/to/artifacts
+
+      - name: Docker load
+        run: |
+          cd path/to/artifacts
+          docker load < docker-image.tar
+          # docker_build_push.sh
 
       - name: Set up SSH connection
         uses: webfactory/ssh-agent@v0.5.3
