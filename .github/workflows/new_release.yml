@@ -107,19 +107,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Install ktlint
-        run: |
-          curl -sSLO https://github.com/pinterest/ktlint/releases/download/0.44.0/ktlint && chmod a+x ktlint && sudo mv ktlint /usr/local/bin/
-
-      - name: Run ktlint
-        run: |
-          ktlint --reporter=checkstyle,output=build/ktlint-report.xml
-        continue-on-error: true
-
-      - uses: yutailang0119/action-ktlint@v3
-        with:
-          report-path: build/*.xml # Support glob patterns by https://www.npmjs.com/package/@actions/glob
-          continue-on-error: false # If annotations contain error of severity, action-ktlint exit 1.
+      - name: "ktlint"
+        uses: "vroy/gha-kotlin-linter@v1"
 
 
   build_docker_image:
