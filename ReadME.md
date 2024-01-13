@@ -21,6 +21,8 @@
       - [Triggers](#triggers-1)
       - [Environment Variables](#environment-variables-2)
       - [Workflow Steps](#workflow-steps-2)
+6. [Maintenance](#maintentance)
+   - [Jobs](#Jobs)
 
 ## Branches
 
