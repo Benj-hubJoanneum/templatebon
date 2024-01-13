@@ -2,7 +2,7 @@
 
 1. [Branches](#branches)
 2. [Development Strategy](#development-strategy)
-3. [Contributing to Repository](#contributing-to-repository)
+3. [Contributing to Repository Project](#contributing-to-repository-project)
 4. [Push Policy](#push-policy)
 5. [Workflow Files](#workflow-files)
    - [new_release.yml](#new_releaseyml)
@@ -36,14 +36,14 @@
 - `dev` branch should not fail.
 - `main` branch must not fail.
 
-## Contributing to Repository
+## Contributing to Repository Project
 
 - Create `hotfix/<NAME>` from `main` to update both `main` and `dev`.
 - Create `feature/<NAME>` from `dev` to add new features.
 
 ## Push Policy
 
-Pushing code without tests is generally not allowed in this organisation
+Pushing code without tests is generally not allowed in this system
 
 1. Commit code with short and direct description \
    ![Image1](imageResources/image1.png)
