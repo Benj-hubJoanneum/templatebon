@@ -2,9 +2,9 @@
 
 1. [Branches](#branches)
 2. [Development Strategy](#development-strategy)
-3. [Contributing to Repository](#contributing-to-repository)
+3. [Contributing to Repository Project](#contributing-to-repository-project)
 4. [Push Policy](#push-policy)
-5. [Workflow Files](#workflow-files)
+5. [Workflow Scripts](#workflow-scripts)
    - [new_release.yml](#new_releaseyml)
       - [How to Use](#how-to-use)
       - [Trigger](#trigger)
@@ -21,26 +21,44 @@
       - [Triggers](#triggers-1)
       - [Environment Variables](#environment-variables-2)
       - [Workflow Steps](#workflow-steps-2)
+6. [Maintenance](#maintentance)
+   - [Jobs](#Jobs)
+     - Build
+       - steps
+         - <name>sdf
+     - Test
+       - steps
+         - <name>sdf
+     - Lint
+         - steps
+             - <name>sdf
+     - Sync-Braches
+         - steps
+             - <name>sdf
+
 
 ## Branches
 
 - `main`: Main branch for linear commit history and releases.
 - `dev`: Developer branch for ongoing updates.
+- `feature/*`: Developer branch for ongoing updates.
+- `hotfix/*`: Developer branch for ongoing updates.
 
 ## Development Strategy
 
-- `feature` branch is allowed to fail.
+- `hotfix/*` branch is allowed to fail.
+- `feature/*` branch is allowed to fail.
 - `dev` branch should not fail.
 - `main` branch must not fail.
 
-## Contributing to Repository
+## Contributing to Repository Project
 
 - Create `hotfix/<NAME>` from `main` to update both `main` and `dev`.
 - Create `feature/<NAME>` from `dev` to add new features.
 
 ## Push Policy
 
-Pushing code without tests is generally not allowed in this organisation
+Pushing code without tests is generally not allowed in this system
 
 1. Commit code with short and direct description \
    ![Image1](imageResources/image1.png)
@@ -50,7 +68,7 @@ Pushing code without tests is generally not allowed in this organisation
    ![Image3](imageResources/image3.png)
 4. Once the Checks are done the Changes are taken into effect in the dev branch.
 
-### workflow files
+### Workflow Scripts
 
 #### new_release.yml
 
