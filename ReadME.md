@@ -4,7 +4,7 @@
 2. [Development Strategy](#development-strategy)
 3. [Contributing to Repository Project](#contributing-to-repository-project)
 4. [Push Policy](#push-policy)
-5. [Workflow Files](#workflow-files)
+5. [Workflow Scripts](#workflow-scripts)
    - [new_release.yml](#new_releaseyml)
       - [How to Use](#how-to-use)
       - [Trigger](#trigger)
@@ -53,7 +53,7 @@ Pushing code without tests is generally not allowed in this system
    ![Image3](imageResources/image3.png)
 4. Once the Checks are done the Changes are taken into effect in the dev branch.
 
-### workflow files
+### Workflow Scripts
 
 #### new_release.yml
 

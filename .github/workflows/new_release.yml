@@ -81,12 +81,6 @@ jobs:
         run: ./gradlew runIntegrationTests
         if: success()
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: lunchbon-build
-          path: resources/build
-
   lint:
     needs: build
     runs-on: ubuntu-latest
