@@ -26,10 +26,13 @@
 
 - `main`: Main branch for linear commit history and releases.
 - `dev`: Developer branch for ongoing updates.
+- `feature/*`: Developer branch for ongoing updates.
+- `hotfix/*`: Developer branch for ongoing updates.
 
 ## Development Strategy
 
-- `feature` branch is allowed to fail.
+- `hotfix/*` branch is allowed to fail.
+- `feature/*` branch is allowed to fail.
 - `dev` branch should not fail.
 - `main` branch must not fail.
 
