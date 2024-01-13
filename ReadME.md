@@ -23,6 +23,19 @@
       - [Workflow Steps](#workflow-steps-2)
 6. [Maintenance](#maintentance)
    - [Jobs](#Jobs)
+     - Build
+       - steps
+         - <name>sdf
+     - Test
+       - steps
+         - <name>sdf
+     - Lint
+         - steps
+             - <name>sdf
+     - Sync-Braches
+         - steps
+             - <name>sdf
+
 
 ## Branches
 
