@@ -120,6 +120,7 @@ jobs:
         with:
           name: klint.html
           path: resources/reports/klint-compliance.html
+        if: always()
 
   build_docker_image:
     needs: test
