@@ -94,6 +94,12 @@ jobs:
       - name: "ktlint"
         uses: "vroy/gha-kotlin-linter@v1"
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: klint.html
+          path: resources/reports/klint-compliance.html
+
   sync-branch:
     needs: test
     runs-on: ubuntu-latest
