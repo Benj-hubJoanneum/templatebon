@@ -16,19 +16,13 @@
       - [How to Use](#how-to-use-2)
       - [Triggers](#triggers-1)
 6. [Maintenance](#maintentance)
-   - [Jobs](#Jobs)
-     - Build
-       - steps
-         - <name>sdf
-     - Test
-       - steps
-         - <name>sdf
-     - Lint
-         - steps
-             - <name>sdf
-     - Sync-Branches
-         - steps
-             - <name>sdf
+   - [Actions](#Actions)
+     - actions/checkout@v4
+     - actions/setup-java@v4
+     - actions/upload-artifact@master
+     - actions/download-artifact@master
+     - Ilshidur/action-discord@master
+     
 7. [AWS](#aws)
 
 ## Branches
@@ -129,33 +123,95 @@ If the deployed version of this project needs a hotfix, the developers need to u
 
 ## Maintenance
 
-### Jobs
+### Actions
 
-A Job is a key component. It defines the tasks that should be executed when the specified conditions are met.
+#### actions/checkout@v4
 
-#### Build
+This action checks out the repository, so the workflow can access it. By default only a single commit is fetched. The auth token is persisted in the local git config.
+This enables the scripts to run authenticated git commands. 
 
-##### Steps
+[Link to the repo of checkout](https://github.com/actions/checkout)
 
-###### name sdf
+#### actions/setup-java@v4
 
-#### Test
+This action provides the following functionality for GitHub Action runners:
 
-##### Steps
+    -   Downloading and setting up a requested version of Java
+    -   Extracting and caching custom version of Java from a local file
+    -   Configuring runner for publishing using Apache Maven
+    -   Configuring runner for publishing using Gradle
+    -   Configuring runner for using GPG private key
+    -   Registering problem matchers for error output
+    -   Caching dependencies managed by Apache Maven
+    -   Caching dependencies managed by Gradle
+    -   Caching dependencies managed by sbt
+    -   Maven Toolchains declaration for specified JDK versions
 
-###### name sdf
+[Link to the repo of setup-java](https://github.com/actions/setup-java)
 
-#### Lint
+#### actions/upload-artifact@master
 
-##### Steps
+This action uploads the artifact. The artifact allows you to persist data after a job has completed, and shar that data with another job in the same workflow.
 
-###### name sdf
+[Link to the repo of upload-artifact@master](https://github.com/actions/upload-artifact)
 
-#### Sync-Branches
+#### actions/download-artifact@master
 
-##### Steps
+This action downloads the artifact so the artifact can be used in different actions of your workflows.
 
-###### name sdf
+[Link to the repo of download-artifact](https://github.com/actions/download-artifact)
+
+#### Ilshidur/action-discord@master
+
+Sends a discord notification message.
+
+[Link to the repo of Ilshidur/action-discord@master](https://github.com/Ilshidur/action-discord)
 
 ## AWS
 
+1. Create an account for AWS
+2. [Link to the official documentation](https://docs.aws.amazon.com/efs/latest/ug/gs-step-one-create-ec2-resources.html)
+3. When your EC2 instance is up and running connect to it with the command line
+
+When you are connected it should look something like that:
+
+![Picture](imageResources/AWS_1.PNG)
+
+Now to install docker first of all run
+
+````
+sudo apt update
+````
+
+to update everything that is already on your instance installed. Now run the following commands:
+
+````
+sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common
+````
+
+````
+curl -fsSl https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+````
+
+````
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+````
+
+````
+apt-cache madison docker-ce
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+````
+
+````
+sudo apt install docker.io
+sudo apt install docker-compose
+````
+
+I took these commands from the following YouTube video:
+
+[Link to the video](https://www.youtube.com/watch?v=awFLzy0XwXo)
