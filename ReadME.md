@@ -32,10 +32,10 @@
      - Lint
          - steps
              - <name>sdf
-     - Sync-Braches
+     - Sync-Branches
          - steps
              - <name>sdf
-
+7. [AWS](#aws)
 
 ## Branches
 
@@ -170,3 +170,35 @@ This workflow is triggered when a pull request from 'hotfix/*' starts.
 8. **Extract Branch Name**: Retrieves the current branch name from the environment.
 9. **Merge Hotfix into Dev**: Merges the hotfix branch into the 'dev' branch using fast-forward-only mode.
 10. **Delete Hotfix Branch**: Deletes the hotfix branch after a successful merge.
+
+## Maintenance
+
+### Jobs
+
+A Job is a key component. It defines the tasks that should be executed when the specified conditions are met.
+
+#### Build
+
+##### Steps
+
+###### name sdf
+
+#### Test
+
+##### Steps
+
+###### name sdf
+
+#### Lint
+
+##### Steps
+
+###### name sdf
+
+#### Sync-Branches
+
+##### Steps
+
+###### name sdf
+
+## AWS
