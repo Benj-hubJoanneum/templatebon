@@ -26,11 +26,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set Git identity
-        run: |
-          git config --global user.email "${{ env.GIT_USER_EMAIL }}"
-          git config --global user.name "${{ env.GIT_USER_NAME }}"
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -85,12 +80,6 @@ jobs:
       - name: Run Integration Tests
         run: ./gradlew runIntegrationTests
         if: success()
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: lunchbon-build
-          path: resources/build
 
   lint:
     needs: build

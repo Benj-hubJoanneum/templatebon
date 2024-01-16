@@ -100,6 +100,13 @@ jobs:
           name: klint.html
           path: resources/reports/klint-compliance.html
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: klint.html
+          path: resources/reports/klint-compliance.html
+        if: always()
+
   sync-branch:
     needs: test
     runs-on: ubuntu-latest

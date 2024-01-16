@@ -99,6 +99,7 @@ jobs:
         with:
           name: klint.html
           path: resources/reports/klint-compliance.html
+        if: always()
 
   sync-branch:
     needs: test
